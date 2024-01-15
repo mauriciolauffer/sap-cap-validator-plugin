@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    setupFiles: 'test/setupFile.js',
+    setupFiles: 'test/setupFile.mjs',
     coverage: {
       include: ['dist/**']
     }
