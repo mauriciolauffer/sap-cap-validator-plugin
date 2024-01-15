@@ -1,15 +1,11 @@
 'use strict';
 
 // const cds = require('@sap/cds');
-// const xxAjv = require('ajv/dist/jtd');
 const Ajv = require('ajv/dist/2019');
-// const Ajv = require('ajv');
 const ajvFormats = require('ajv-formats');
 const ajv = new Ajv({allErrors: true});
-// const format = require('ajv/dist/vocabularies/format/format');
-// ajv.addKeyword('format');
 ajvFormats(ajv);
-const logger = cds.log('validator-plugin');
+const logger = globalThis.cds.log('validator-plugin');
 const VALIDATE_EVENTS = ['CREATE', 'UPDATE'];
 let regxpAnnotationTag = new RegExp(`^@Validator.`);
 const cdsTypeToAjvType = new Map([
@@ -32,21 +28,6 @@ const cdsTypeToAjvType = new Map([
   ['cds.LargeBinary', 'string'],
   ['cds.LargeString', 'string']
 ]);
-
-const cdsTypeToAjvFormat = new Map([
-  ['cds.UUID', 'uuid'],
-  ['cds.Int32', 'int32'],
-  ['cds.Int64', 'int64'],
-  ['cds.Decimal', 'double'],
-  ['cds.Double', 'double'],
-  ['cds.Date', 'date'],
-  ['cds.Time', 'time'],
-  ['cds.DateTime', 'date-time'],
-  ['cds.Binary', 'binary'],
-  ['cds.LargeBinary', 'binary']
-]);
-
-cds.log('validator-plugin', 'debug'); // TODO: remove it
 
 /**
  * Builds schema to validate an entity. Ensures only the annotated fields are validated.
@@ -123,7 +104,7 @@ function mapAjvToCdsErrors(ajvErrors) {
 
 /**
  * Get entity's annotated elements
- * @param {object} service
+ * @param {cds.ApplicationService} service
  * @returns {object[]}
  */
 function getAnnotatedEntities(service) {
@@ -210,11 +191,13 @@ function requestHandler(req) {
 /**
  * Event triggered when all CDS services are served. Validator middleware will be registered.
  */
-cds.once('served', async (services) => {
+globalThis.cds.once('served', async (services) => {
   logger.debug('Starting validator plugin...');
   const annotatedServiceEntities = new Map();
   for (const service of services) {
-    if (service instanceof cds.ApplicationService) {
+    // console.log(service.kind, service instanceof cds.ApplicationService);
+    // if (service instanceof cds.ApplicationService) {
+    if (service.kind === 'app-service') {
       annotatedServiceEntities.set(service, getAnnotatedEntities(service));
     }
   }
@@ -227,6 +210,6 @@ cds.once('served', async (services) => {
     }
   }
   regxpAnnotationTag = null;
-  // cdsTypeToAjvType.clear();
+  cdsTypeToAjvType.clear();
   annotatedServiceEntities.clear();
 });
