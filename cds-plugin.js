@@ -1,7 +1,7 @@
 'use strict';
 
-// const cds = require('@sap/cds');
-const Ajv = require('ajv/dist/2019');
+const cds = require('@sap/cds');
+const Ajv = require('ajv');
 const ajvFormats = require('ajv-formats');
 const ajv = new Ajv({allErrors: true});
 ajvFormats(ajv);
@@ -31,21 +31,23 @@ const cdsTypeToAjvType = new Map([
 
 /**
  * Builds schema to validate an entity. Ensures only the annotated fields are validated.
- * @param {object[]} entityElements
+ * @param {cds.entity} entity
  * @returns {Ajv.SchemaObject}
  */
-function buildSchema(entityElements) {
+function buildSchema(entity) {
   const schema = {
+    $id: entity.name,
+    $schema: 'http://json-schema.org/draft-07/schema',
     type: 'object',
     properties: {},
-    // optionalProperties: {},
+    // optionalProperties: {}, // JTD
     additionalProperties: true
   };
-  for (const [key, elementProperties] of Object.entries(entityElements)) {
+  for (const [key, elementProperties] of Object.entries(entity.elements)) {
     const schemaProperty = buildSchemaProperty(elementProperties);
     if (Object.keys(schemaProperty).length) {
       schema.properties[key] = schemaProperty;
-      // schema.optionalProperties[key] = schemaProperty;
+      // schema.optionalProperties[key] = schemaProperty; // JTD
     }
   }
   logger.debug(schema);
@@ -66,14 +68,6 @@ function buildSchemaProperty(elementProperties) {
       if (tag) {
         property[tag] = value;
       }
-      /* if (tag === 'format') {
-        property.metadata = {
-          format: value
-        };
-        // property.xxxxxxxx = true;
-      } else if (tag) {
-        property[tag] = value;
-      } */
     }
   }
   return property;
@@ -81,7 +75,7 @@ function buildSchemaProperty(elementProperties) {
 
 /**
  * Map AJV errors to CAP format to be used in req.error()
- * @param {object[]} ajvErrors
+ * @param {Ajv.ErrorObject[]} ajvErrors
  * @returns {object[]}
  */
 function mapAjvToCdsErrors(ajvErrors) {
@@ -105,7 +99,7 @@ function mapAjvToCdsErrors(ajvErrors) {
 /**
  * Get entity's annotated elements
  * @param {cds.ApplicationService} service
- * @returns {object[]}
+ * @returns {cds.entity[]}
  */
 function getAnnotatedEntities(service) {
   const annotatedEntities = [];
@@ -159,19 +153,20 @@ function isValidAnnotation(property) {
 /**
  * Register request handler
  * @param {cds.ApplicationService} service
- * @param {cds.ApplicationService} entity
+ * @param {cds.entity} entity
  */
 function registerValidator(service, entity) {
   logger.debug('Preparing validation schema to:', entity.name);
-  const schema = buildSchema(entity.elements);
-  if (!ajv.validateSchema(schema)) {
+  const schema = buildSchema(entity);
+  try {
+    ajv.compile(schema);
+    service.prepend(() => {
+      service.before(VALIDATE_EVENTS, entity, requestHandler);
+    });
+  } catch (err) {
     logger.error(entity.name, 'schema is invalid! It will not be registered.');
-    return;
+    logger.error(schema);
   }
-  ajv.addSchema(schema, entity.name);
-  service.prepend(() => {
-    service.before(VALIDATE_EVENTS, entity, requestHandler);
-  });
 }
 
 /**
@@ -195,8 +190,6 @@ globalThis.cds.once('served', async (services) => {
   logger.debug('Starting validator plugin...');
   const annotatedServiceEntities = new Map();
   for (const service of services) {
-    // console.log(service.kind, service instanceof cds.ApplicationService);
-    // if (service instanceof cds.ApplicationService) {
     if (service.kind === 'app-service') {
       annotatedServiceEntities.set(service, getAnnotatedEntities(service));
     }

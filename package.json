@@ -5,7 +5,7 @@
   "author": "Mauricio Lauffer",
   "license": "MIT",
   "homepage": "https://github.com/mauriciolauffer/sap-cap-validator-plugin#readme",
-  "main": "index.js",
+  "main": "cds-plugin.js",
   "keywords": [
     "sap",
     "cap",
@@ -16,10 +16,9 @@
   ],
   "scripts": {
     "lint": "eslint . --cache",
-    "lint:ci": "eslint .",
+    "lint:ci": "eslint . -f @microsoft/eslint-formatter-sarif -o eslint.sarif",
     "test": "vitest",
-    "test:ci": "vitest run",
-    "testx": "cd test/cap-app && vitest"
+    "test:ci": "vitest run"
   },
   "dependencies": {
     "ajv": "^8.12.0",
@@ -27,10 +26,10 @@
   },
   "devDependencies": {
     "@cap-js/sqlite": "^1.4.0",
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.11.3",
     "eslint": "^8.56.0",
     "eslint-config-mlauffer-nodejs": "^1.4.6",
-    "supertest": "^6.3.3",
+    "supertest": "^6.3.4",
     "vitest": "^1.2.0"
   },
   "peerDependencies": {
