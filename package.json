@@ -1,6 +1,6 @@
 {
   "name": "sap-cap-validator-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SAP CAP plugin to validate incoming API requests.",
   "author": "Mauricio Lauffer",
   "license": "MIT",
