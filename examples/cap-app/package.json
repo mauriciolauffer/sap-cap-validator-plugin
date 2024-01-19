@@ -1,0 +1,27 @@
+{
+  "name": "cap-app",
+  "private": true,
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "dependencies": {
+    "@cap-js/sqlite": "^1.4.0",
+    "sap-cap-validator-plugin": "*"
+  },
+  "peerDependencies": {
+    "@sap/cds": ">=7"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sql"
+      }
+    },
+    "log": {
+      "levels": {
+        "validator-plugin": "error",
+        "cds": "error"
+      }
+    }
+  }
+}

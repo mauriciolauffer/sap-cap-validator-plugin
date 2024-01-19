@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    setupFiles: 'test/setupFile.mjs',
+    setupFiles: 'examples/cap-app/test/setupFile.js',
     coverage: {
-      include: ['dist/**']
+      include: ['cds-plugin.js']
     }
   }
 });
