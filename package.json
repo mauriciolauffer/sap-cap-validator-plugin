@@ -1,7 +1,7 @@
 {
   "name": "sap-cap-validator-plugin",
   "version": "0.0.1",
-  "description": "SAP CAP plugin to validate incoming data",
+  "description": "SAP CAP plugin to validate incoming API requests.",
   "author": "Mauricio Lauffer",
   "license": "MIT",
   "homepage": "https://github.com/mauriciolauffer/sap-cap-validator-plugin#readme",
@@ -10,9 +10,16 @@
     "sap",
     "cap",
     "cds",
+    "sap-cap",
+    "cap-js",
+    "nodejs",
     "plugin",
     "validator",
     "validation"
+  ],
+  "workspaces": [
+    ".",
+    "examples/*"
   ],
   "scripts": {
     "lint": "eslint . --cache",
@@ -25,8 +32,8 @@
     "ajv-formats": "^2.1.1"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1.4.0",
     "@types/node": "^20.11.3",
+    "@vitest/coverage-v8": "^1.2.1",
     "eslint": "^8.56.0",
     "eslint-config-mlauffer-nodejs": "^1.4.6",
     "supertest": "^6.3.4",

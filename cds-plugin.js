@@ -3,26 +3,26 @@
 const cds = require('@sap/cds');
 const Ajv = require('ajv');
 const ajvFormats = require('ajv-formats');
-const ajv = new Ajv({allErrors: true});
+const ajv = new Ajv({allErrors: true, coerceTypes: true});
 ajvFormats(ajv);
-const logger = globalThis.cds.log('validator-plugin');
+const logger = cds.log('validator-plugin');
 const VALIDATE_EVENTS = ['CREATE', 'UPDATE'];
 let regxpAnnotationTag = new RegExp(`^@Validator.`);
 const cdsTypeToAjvType = new Map([
   ['cds.UUID', 'string'],
   ['cds.Boolean', 'boolean'],
-  ['cds.UInt8', 'uint8'],
-  ['cds.Int16', 'int16'],
-  ['cds.Int32', 'int32'],
-  ['cds.Integer', 'string'],
-  ['cds.Int64', 'int64'],
-  ['cds.Integer64', 'string'],
-  ['cds.Decimal', 'string'],
-  ['cds.Double', 'string'],
-  ['cds.Date', 'date'],
-  ['cds.Time', 'time'],
+  ['cds.UInt8', 'integer'],
+  ['cds.Int16', 'integer'],
+  ['cds.Int32', 'integer'],
+  ['cds.Integer', 'integer'],
+  ['cds.Int64', 'integer'],
+  ['cds.Integer64', 'integer'],
+  ['cds.Decimal', 'number'],
+  ['cds.Double', 'number'],
+  ['cds.Date', 'string'],
+  ['cds.Time', 'string'],
   ['cds.DateTime', 'string'],
-  ['cds.Timestamp', 'timestamp'],
+  ['cds.Timestamp', 'string'],
   ['cds.String', 'string'],
   ['cds.Binary', 'string'],
   ['cds.LargeBinary', 'string'],
@@ -186,7 +186,7 @@ function requestHandler(req) {
 /**
  * Event triggered when all CDS services are served. Validator middleware will be registered.
  */
-globalThis.cds.once('served', async (services) => {
+cds.once('served', async (services) => {
   logger.debug('Starting validator plugin...');
   const annotatedServiceEntities = new Map();
   for (const service of services) {

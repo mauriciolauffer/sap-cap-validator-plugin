@@ -167,3 +167,4 @@ db.*
 
 # CAP CDS
 @cds-models/
+*.sarif
