@@ -24,7 +24,7 @@
   "scripts": {
     "lint": "eslint . --cache",
     "lint:ci": "eslint . -f @microsoft/eslint-formatter-sarif -o eslint.sarif",
-    "test": "vitest",
+    "test": "vitest --coverage",
     "test:ci": "vitest run"
   },
   "dependencies": {
@@ -32,12 +32,12 @@
     "ajv-formats": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.3",
+    "@types/node": "^20.11.5",
     "@vitest/coverage-v8": "^1.2.1",
     "eslint": "^8.56.0",
     "eslint-config-mlauffer-nodejs": "^1.4.6",
     "supertest": "^6.3.4",
-    "vitest": "^1.2.0"
+    "vitest": "^1.2.1"
   },
   "peerDependencies": {
     "@sap/cds": ">=7"
