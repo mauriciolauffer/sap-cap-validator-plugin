@@ -1,4 +1,4 @@
-using {validatorplugin.test.db as db} from '../db/data-model';
+using {validatorplugin.test.db as db} from '../db/schema';
 
 service ValidatorPluginService {
   entity CdsTypes          as projection on db.CdsTypes;

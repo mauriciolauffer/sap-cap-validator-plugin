@@ -6,6 +6,9 @@
   "license": "MIT",
   "homepage": "https://github.com/mauriciolauffer/sap-cap-validator-plugin#readme",
   "main": "cds-plugin.js",
+  "files": [
+    "cds-plugin.js"
+  ],
   "keywords": [
     "sap",
     "cap",
@@ -32,15 +35,15 @@
     "ajv-formats": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
-    "@vitest/coverage-v8": "^1.2.1",
+    "@types/node": "^20.11.13",
+    "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
     "eslint-config-mlauffer-nodejs": "^1.4.6",
     "supertest": "^6.3.4",
-    "vitest": "^1.2.1"
+    "vitest": "^1.2.2"
   },
   "peerDependencies": {
-    "@sap/cds": ">=7"
+    "@sap/cds": "^7.5.3"
   },
   "repository": {
     "type": "git",

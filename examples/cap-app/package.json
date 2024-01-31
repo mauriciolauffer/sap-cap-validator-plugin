@@ -5,22 +5,17 @@
     "start": "cds-serve"
   },
   "dependencies": {
-    "@cap-js/sqlite": "^1.4.0",
-    "sap-cap-validator-plugin": "*"
+    "@sap/cds": "^7.5.3",
+    "sap-cap-validator-plugin": "^0.0.2"
   },
-  "peerDependencies": {
-    "@sap/cds": ">=7"
+  "devDependencies": {
+    "@cap-js/sqlite": "^1.4.0"
   },
   "cds": {
-    "requires": {
-      "db": {
-        "kind": "sql"
-      }
-    },
+    "requires": {},
     "log": {
       "levels": {
-        "validator-plugin": "error",
-        "cds": "error"
+        "validator-plugin": "error"
       }
     }
   }
